@@ -45,8 +45,9 @@ Also worth confirming or supplying:
 - **Trading hours** (`hours`) — currently assumed Mon–Fri 7am–5pm, Sat 8am–2pm, Sun closed.
 - **Service area** (`serviceArea`) — currently Western Sydney plus greater Sydney metro.
 - **After-hours / emergency policy** (`emergencyNote`).
-- **Domain** — set `site` in `astro.config.mjs` and the `Sitemap:` line in `public/robots.txt`.
-  These drive canonical URLs, Open Graph tags and the sitemap.
+- **Domain** — on GitHub Pages this is resolved automatically (see Deploying). For any other host,
+  set the fallback `site` in `astro.config.mjs`; it drives canonical URLs, Open Graph tags, the
+  sitemap and `robots.txt`, all of which are generated.
 - **Google Business Profile** — every competitor leads with a star rating (4.9 from 247 reviews,
   4.7 from 140 reviews). Creating one and gathering reviews is probably the single highest-value
   marketing step after launch.
@@ -139,10 +140,47 @@ by the same `model` value.
 
 The build is plain static files in `dist/`, so any static host works.
 
-**Netlify or Cloudflare Pages:** connect the repo, build command `npm run build`, publish directory
-`dist`. Or drag the `dist` folder into the Netlify dashboard for a one-off deploy.
+### GitHub Pages (configured)
 
-Set the real domain in `astro.config.mjs` and `public/robots.txt` first.
+`.github/workflows/deploy.yml` builds and publishes on every push to `main`, and can be re-run
+manually from the Actions tab. **One-time setup:** in the repo, go to
+**Settings → Pages → Build and deployment → Source** and choose **GitHub Actions**. Nothing else to
+configure — no `gh-pages` branch, no deploy keys.
+
+The site will be published at **https://tisheliosa.github.io/east-hills/**.
+
+The workflow needs no URL hardcoded. `actions/configure-pages` resolves the origin and base path at
+build time and passes them through as `SITE_URL` / `BASE_PATH`, which `astro.config.mjs` reads. That
+means the same workflow keeps working if the repo is renamed, moved to a user page, or pointed at a
+custom domain.
+
+Because a project page is served from `/east-hills/` rather than a domain root, every internal link
+and asset URL goes through `withBase()` in `src/lib/url.ts`. **If you add a link or asset, use that
+helper** — a hardcoded `/contact` or `/logo.svg` works locally and 404s on Pages:
+
+```astro
+---
+import { withBase } from '../lib/url';
+---
+<a href={withBase('contact')}>Contact</a>
+<img src={withBase('logo.svg')} alt="" />
+```
+
+`public/.nojekyll` is required and already present: without it GitHub Pages' Jekyll step strips the
+`_astro/` directory, which is where all the CSS, JS and fonts live.
+
+### Custom domain
+
+Add a `public/CNAME` file containing just the domain (e.g. `easthills.com.au`), point the DNS at
+GitHub Pages, and set it under Settings → Pages. `configure-pages` then reports the custom domain
+with an empty base path, so links flatten back to `/contact` automatically — no code change.
+
+### Other hosts
+
+**Netlify or Cloudflare Pages:** connect the repo, build command `npm run build`, publish directory
+`dist`. Or drag the `dist` folder into the Netlify dashboard for a one-off deploy. These serve from a
+domain root, so the default `base` of `/` applies; set the real domain as the fallback `site` in
+`astro.config.mjs`.
 
 ---
 
