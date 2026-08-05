@@ -1,0 +1,79 @@
+---
+import { processSteps } from '../data/services';
+---
+
+<section class="process section">
+  <div class="shell">
+    <p class="eyebrow" data-reveal>How it works</p>
+    <h2 class="process__title" data-reveal style="--reveal-delay:60ms">
+      No mystery, no runaround.
+    </h2>
+
+    <ol class="process__list" data-reveal-group>
+      {
+        processSteps.map((step, i) => (
+          <li class="step" data-reveal>
+            <span class="step__num">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <h3 class="step__title">{step.title}</h3>
+              <p class="step__body">{step.body}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .process {
+    background: var(--paper-warm);
+    border-block: 1px solid var(--hairline);
+  }
+
+  .process__title {
+    font-size: var(--step-h2);
+    max-width: 24ch;
+  }
+
+  .process__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(2rem, 4vw, 3.5rem);
+    margin-top: clamp(2.5rem, 6vh, 4rem);
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--ink);
+  }
+
+  .step__num {
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--copper);
+  }
+
+  .step__title {
+    font-size: var(--step-h3);
+    letter-spacing: -0.02em;
+  }
+
+  .step__body {
+    margin-top: 0.6rem;
+    font-size: var(--step-small);
+    color: var(--steel);
+  }
+
+  @media (max-width: 820px) {
+    .process__list {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+</style>

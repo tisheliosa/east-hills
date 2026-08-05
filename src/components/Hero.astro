@@ -1,0 +1,114 @@
+---
+import Workshop3D from './Workshop3D.astro';
+import { site, primaryPhone } from '../data/site';
+---
+
+<section class="hero">
+  <div class="shell hero__grid">
+    <div class="hero__copy">
+      <p class="hero__eyebrow" data-reveal>
+        <span class="hero__dot" aria-hidden="true"></span>
+        {site.serviceArea.primary} &middot; Licensed &amp; insured
+      </p>
+
+      <h1 class="hero__title" data-reveal style="--reveal-delay:80ms">
+        Wired right.<br />Finished properly.
+      </h1>
+
+      <p class="hero__lead" data-reveal style="--reveal-delay:160ms">
+        Electrical, refrigeration and fit-out work across {site.serviceArea.primary}. Fast service,
+        competitive rates, and a {site.warrantyMonths}-month warranty on every job.
+      </p>
+
+      <div class="hero__actions" data-reveal style="--reveal-delay:240ms">
+        <a class="btn btn--copper" href={`tel:${primaryPhone.tel}`}>
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+            <path d="M6.5 3.5h3l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5v3a1.5 1.5 0 0 1-1.7 1.5A16.5 16.5 0 0 1 5 5.2 1.5 1.5 0 0 1 6.5 3.5Z" />
+          </svg>
+          Call {primaryPhone.display}
+        </a>
+        <a class="btn btn--ghost" href="#services">
+          See what we do
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 5v14M6 13l6 6 6-6" />
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero__visual" data-reveal style="--reveal-delay:180ms">
+      <Workshop3D />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    /* Pulls the hero up under the transparent sticky nav. */
+    padding-block: clamp(2rem, 6vh, 4rem) clamp(3rem, 8vh, 5.5rem);
+  }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    align-items: center;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    min-height: min(74vh, 720px);
+  }
+
+  .hero__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-display);
+    font-size: var(--step-micro);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--steel);
+  }
+
+  .hero__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--copper);
+    flex: none;
+  }
+
+  .hero__title {
+    margin-top: 1.5rem;
+    font-size: var(--step-hero);
+    font-weight: 800;
+    letter-spacing: -0.042em;
+  }
+
+  .hero__lead {
+    margin-top: 1.5rem;
+    max-width: 44ch;
+    font-size: var(--step-lead);
+    line-height: 1.5;
+    color: var(--steel);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.25rem;
+  }
+
+  @media (max-width: 900px) {
+    .hero__grid {
+      grid-template-columns: 1fr;
+      min-height: 0;
+      gap: 2.5rem;
+    }
+
+    /* Copy first on small screens — the headline and the phone number matter
+       more than the 3D when someone is standing in front of a broken fridge. */
+    .hero__visual {
+      order: 2;
+    }
+  }
+</style>

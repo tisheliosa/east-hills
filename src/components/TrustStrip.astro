@@ -1,0 +1,60 @@
+---
+import { site } from '../data/site';
+
+// Licence number is rendered only once supplied in src/data/site.ts, so the
+// site never makes a licensing claim it cannot back with a number.
+const items = [
+  site.licence.number
+    ? `${site.licence.authority} Licence ${site.licence.number}`
+    : 'Fully licensed & insured',
+  `${site.warrantyMonths}-month warranty`,
+  'Free quotes',
+  'Pick-up & delivery on appliance repairs',
+  `ABN ${site.abn}`,
+];
+---
+
+<div class="strip">
+  <div class="shell strip__inner" data-reveal-group>
+    {
+      items.map((item) => (
+        <p class="strip__item" data-reveal>
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m4 12.5 5 5 11-11" />
+          </svg>
+          {item}
+        </p>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .strip {
+    border-block: 1px solid var(--hairline);
+    background: var(--paper-warm);
+  }
+
+  .strip__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.85rem clamp(1.25rem, 3.5vw, 2.75rem);
+    padding-block: 1.25rem;
+  }
+
+  .strip__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--step-micro);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+  }
+
+  .strip__item svg {
+    color: var(--copper);
+    flex: none;
+  }
+</style>

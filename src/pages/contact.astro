@@ -1,0 +1,254 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site, addressOneLine, streetAddress, mapsUrl } from '../data/site';
+
+const title = `Contact ${site.legalName} — Call ${site.phones[0]!.display}`;
+const description = `Call ${site.legalName} on ${site.phones[0]!.display} or ${site.phones[1]!.display} for electrical, refrigeration, air conditioning, hot water, decking and flooring work across ${site.serviceArea.primary}. Free quotes.`;
+---
+
+<BaseLayout {title} {description}>
+  <section class="contact section">
+    <div class="shell">
+      <div class="contact__head">
+        <p class="eyebrow" data-reveal>Contact</p>
+        <h1 class="contact__title" data-reveal style="--reveal-delay:60ms">
+          Need a quote? Just call.
+        </h1>
+        <p class="lead contact__lead" data-reveal style="--reveal-delay:120ms">
+          The quickest way to get an answer is over the phone — you will speak to someone who does
+          the work and can tell you what is involved. Quotes are free and there is no obligation.
+        </p>
+      </div>
+
+      <div class="contact__numbers" data-reveal-group>
+        {
+          site.phones.map((phone) => (
+            <a class="dial" href={`tel:${phone.tel}`} data-reveal>
+              <span class="dial__label">{phone.label}</span>
+              <span class="dial__number">{phone.display}</span>
+              <span class="dial__action">
+                Tap to call
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </span>
+            </a>
+          ))
+        }
+      </div>
+
+      <div class="contact__grid">
+        <div class="panel" data-reveal>
+          <h2 class="panel__title">Email</h2>
+          <a class="panel__link" href={`mailto:${site.email}`}>{site.email}</a>
+          <p class="panel__note">
+            Best for photos of the job, quotes for larger works, and builder or strata enquiries.
+          </p>
+        </div>
+
+        <div class="panel" data-reveal>
+          <h2 class="panel__title">Workshop</h2>
+          <address class="panel__address">
+            {streetAddress}<br />
+            {site.address.suburb} {site.address.state} {site.address.postcode}
+          </address>
+          <a class="panel__link panel__link--small" href={mapsUrl} target="_blank" rel="noopener noreferrer">
+            Get directions
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M7 17 17 7M9 7h8v8" />
+            </svg>
+          </a>
+          <p class="panel__note">
+            Drop-off and collection point for bench repairs. Most work is done on site.
+          </p>
+        </div>
+
+        <div class="panel" data-reveal>
+          <h2 class="panel__title">Hours</h2>
+          <ul class="panel__hours">
+            {
+              site.hours.map((slot) => (
+                <li>
+                  <span>{slot.label}</span>
+                  <span class="panel__time">{slot.time}</span>
+                </li>
+              ))
+            }
+          </ul>
+          <p class="panel__note">{site.emergencyNote}</p>
+        </div>
+
+        <div class="panel" data-reveal>
+          <h2 class="panel__title">Service area</h2>
+          <p class="panel__address">{site.serviceArea.detail}</p>
+          <p class="panel__note">
+            Not sure if we reach you? Call and ask — we will tell you straight away.
+          </p>
+        </div>
+      </div>
+
+      <div class="contact__legal" data-reveal>
+        <p>{site.legalName}</p>
+        <p>ABN {site.abn}</p>
+        {site.licence.number && <p>{site.licence.authority} Licence {site.licence.number}</p>}
+        {site.arctick.number && <p>ARCtick {site.arctick.number}</p>}
+        <p class="visually-hidden">{addressOneLine}</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact__title {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+  }
+
+  .contact__lead {
+    margin-top: 1.5rem;
+  }
+
+  .contact__numbers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1px;
+    margin-top: clamp(2.5rem, 6vh, 4rem);
+    background: var(--hairline);
+    border: 1px solid var(--hairline);
+  }
+
+  .dial {
+    flex: 1 1 18rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: clamp(1.75rem, 3.5vw, 2.75rem);
+    background: var(--paper);
+    transition: background-color 0.3s var(--ease);
+  }
+
+  .dial:hover {
+    background: var(--white);
+  }
+
+  .dial__label {
+    font-size: var(--step-micro);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--copper);
+  }
+
+  .dial__number {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5.5vw, 3.25rem);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+
+  .dial__action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--step-micro);
+    letter-spacing: 0.06em;
+    color: var(--steel);
+  }
+
+  .contact__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    margin-top: 1px;
+    background: var(--hairline);
+    border: 1px solid var(--hairline);
+    border-top: 0;
+  }
+
+  .panel {
+    padding: clamp(1.5rem, 2.6vw, 2rem);
+    background: var(--paper);
+  }
+
+  .panel__title {
+    font-size: var(--step-micro);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--steel);
+    margin-bottom: 1rem;
+  }
+
+  .panel__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    font-size: var(--step-body);
+    font-weight: 500;
+    word-break: break-word;
+    border-bottom: 1px solid var(--copper);
+    padding-bottom: 1px;
+  }
+
+  .panel__link:hover {
+    color: var(--copper);
+  }
+
+  .panel__link--small {
+    margin-top: 0.9rem;
+    font-size: var(--step-small);
+  }
+
+  .panel__address {
+    font-size: var(--step-small);
+    font-style: normal;
+    line-height: 1.6;
+  }
+
+  .panel__hours {
+    display: grid;
+    gap: 0.6rem;
+    font-size: var(--step-small);
+  }
+
+  .panel__hours li {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panel__time {
+    color: var(--steel);
+  }
+
+  .panel__note {
+    margin-top: 1rem;
+    font-size: var(--step-micro);
+    line-height: 1.55;
+    color: var(--steel);
+  }
+
+  .contact__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    margin-top: 2.5rem;
+    font-size: var(--step-micro);
+    letter-spacing: 0.05em;
+    color: var(--steel);
+  }
+
+  @media (max-width: 1040px) {
+    .contact__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 560px) {
+    .contact__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

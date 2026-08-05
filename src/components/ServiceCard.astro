@@ -1,0 +1,125 @@
+---
+import type { Service } from '../data/services';
+
+interface Props {
+  service: Service;
+  index: number;
+}
+
+const { service, index } = Astro.props;
+---
+
+<article class="card" id={service.id} data-reveal>
+  <header class="card__head">
+    <span class="card__icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" set:html={service.icon} />
+    </span>
+    <span class="card__index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+  </header>
+
+  <h3 class="card__title">{service.name}</h3>
+  <p class="card__tagline">{service.tagline}</p>
+  <p class="card__body">{service.body}</p>
+
+  <ul class="card__items">
+    {
+      service.items.map((item) => (
+        <li>
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m5 12.5 4.5 4.5L19 7" />
+          </svg>
+          {item}
+        </li>
+      ))
+    }
+  </ul>
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.75rem, 2.6vw, 2.5rem);
+    background: var(--paper);
+    /* Offsets the sticky nav when linked to from the footer. */
+    scroll-margin-top: 6rem;
+    transition: background-color 0.3s var(--ease);
+  }
+
+  .card:hover {
+    background: var(--white);
+  }
+
+  .card__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .card__icon {
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border: 1px solid var(--hairline);
+    border-radius: 2px;
+    color: var(--copper);
+    transition:
+      border-color 0.3s var(--ease),
+      background-color 0.3s var(--ease);
+  }
+
+  .card:hover .card__icon {
+    border-color: var(--copper);
+    background: rgba(180, 83, 10, 0.05);
+  }
+
+  .card__index {
+    font-family: var(--font-display);
+    font-size: var(--step-micro);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--steel-light);
+  }
+
+  .card__title {
+    font-size: var(--step-h3);
+    letter-spacing: -0.025em;
+  }
+
+  .card__tagline {
+    margin-top: 0.55rem;
+    font-size: var(--step-body);
+    font-weight: 500;
+    color: var(--copper);
+  }
+
+  .card__body {
+    margin-top: 1rem;
+    font-size: var(--step-small);
+    color: var(--steel);
+  }
+
+  .card__items {
+    display: grid;
+    gap: 0.55rem;
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--hairline);
+    font-size: var(--step-small);
+  }
+
+  .card__items li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 0.6rem;
+  }
+
+  .card__items svg {
+    margin-top: 0.32em;
+    color: var(--steel-light);
+  }
+</style>

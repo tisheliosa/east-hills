@@ -1,0 +1,119 @@
+---
+import { site } from '../data/site';
+import { pillars } from '../data/services';
+---
+
+<section class="about section" id="about">
+  <div class="shell">
+    <div class="about__head">
+      <div>
+        <p class="eyebrow" data-reveal>About us</p>
+        <h2 class="about__title" data-reveal style="--reveal-delay:60ms">One team, every trade.</h2>
+      </div>
+
+      <div class="about__body" data-reveal style="--reveal-delay:120ms">
+        <p>
+          {site.legalName} is a {site.address.suburb}-based team doing the work most people split
+          between three different contractors. We wire new builds and renovations, install and repair
+          commercial refrigeration and air conditioning, put in hot water systems, and lay decks and
+          laminate floors.
+        </p>
+        <p class="about__punch">One call, one team, one invoice — and we turn up when we say we will.</p>
+        <p>
+          {site.serviceArea.detail}
+        </p>
+      </div>
+    </div>
+
+    <ul class="about__pillars" data-reveal-group>
+      {
+        pillars.map((pillar, i) => (
+          <li class="pillar" data-reveal>
+            <span class="pillar__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="pillar__title">{pillar.title}</h3>
+            <p class="pillar__body">{pillar.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .about__head {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  .about__title {
+    font-size: var(--step-h2);
+  }
+
+  .about__body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    font-size: var(--step-lead);
+    line-height: 1.6;
+    color: var(--steel);
+  }
+
+  .about__punch {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .about__pillars {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    margin-top: clamp(3rem, 7vh, 5rem);
+    background: var(--hairline);
+    border-block: 1px solid var(--hairline);
+  }
+
+  .pillar {
+    padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1.25rem, 2vw, 1.75rem);
+    background: var(--paper);
+  }
+
+  .pillar__num {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--step-micro);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--copper);
+    margin-bottom: 1.25rem;
+  }
+
+  .pillar__title {
+    font-size: var(--step-h3);
+    letter-spacing: -0.02em;
+  }
+
+  .pillar__body {
+    margin-top: 0.65rem;
+    font-size: var(--step-small);
+    color: var(--steel);
+  }
+
+  @media (max-width: 900px) {
+    .about__head {
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+    }
+
+    .about__pillars {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 520px) {
+    .about__pillars {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,299 @@
+---
+import { services } from '../data/services';
+
+// The fridge leads: it is the most recognisable object and the service least
+// likely to be associated with an electrician, so it earns a second look.
+const initial = 'fridge';
+---
+
+<div class="workshop" data-workshop data-initial={initial}>
+  <div class="workshop__stage">
+    <canvas class="workshop__canvas" data-workshop-canvas aria-hidden="true"></canvas>
+
+    {/* Shown until the 3D boots, and permanently when 3D is skipped. */}
+    <div class="workshop__poster" data-workshop-poster>
+      <svg viewBox="0 0 320 320" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true">
+        <g opacity="0.28">
+          <path d="M20 250h280M40 20v260M280 20v260" stroke-dasharray="3 6" />
+        </g>
+        <g stroke-linejoin="round">
+          <rect x="96" y="48" width="128" height="212" rx="5" />
+          <rect x="96" y="48" width="128" height="24" rx="5" />
+          <rect x="96" y="238" width="128" height="22" rx="5" />
+          <rect x="110" y="84" width="100" height="146" rx="3" />
+          <path d="M110 120h100M110 156h100M110 192h100" opacity="0.5" />
+          <path d="M204 96v122" stroke-width="2.4" />
+          <path d="M118 260v8M202 260v8" />
+        </g>
+        <g opacity="0.4" stroke-width="0.9">
+          <path d="M244 48v212M238 48h12M238 260h12" />
+          <path d="M96 282h128M96 276v12M224 276v12" />
+        </g>
+      </svg>
+      <p class="workshop__poster-label">Commercial refrigeration</p>
+    </div>
+
+    <p class="workshop__hint" data-workshop-hint hidden>
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+        <path d="M9 6 5 12l4 6M15 6l4 6-4 6" />
+      </svg>
+      Drag to spin
+    </p>
+  </div>
+
+  <div class="workshop__picker" data-workshop-picker hidden>
+    <p class="workshop__picker-label" id="workshop-picker-label">Explore what we install and repair</p>
+    <div class="workshop__pills" role="group" aria-labelledby="workshop-picker-label">
+      {
+        services.map((service) => (
+          <button
+            type="button"
+            class="pill"
+            data-model={service.model}
+            aria-pressed={service.model === initial ? 'true' : 'false'}
+          >
+            <span class="pill__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={service.icon} />
+            </span>
+            {service.short}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  .workshop {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .workshop__stage {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    /* A soft radial pool of light so the object sits in space rather than
+       floating on flat paper. */
+    background:
+      radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.95), rgba(242, 241, 236, 0) 68%),
+      radial-gradient(circle at 50% 88%, rgba(11, 11, 10, 0.07), rgba(11, 11, 10, 0) 60%);
+  }
+
+  .workshop__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    /* Horizontal drag rotates the model; vertical gestures still scroll the
+       page, which matters a lot on touch devices. */
+    touch-action: pan-y;
+    opacity: 0;
+    transition: opacity 0.9s var(--ease-out);
+  }
+
+  .workshop[data-mode='live'] .workshop__canvas {
+    opacity: 1;
+  }
+
+  .workshop__poster {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 1rem;
+    color: var(--ink);
+    transition: opacity 0.6s var(--ease);
+  }
+
+  .workshop__poster svg {
+    width: min(78%, 320px);
+    height: auto;
+  }
+
+  .workshop__poster-label {
+    font-family: var(--font-display);
+    font-size: var(--step-micro);
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--steel);
+  }
+
+  .workshop[data-mode='live'] .workshop__poster {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .workshop__hint {
+    position: absolute;
+    left: 50%;
+    bottom: 0.25rem;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: var(--step-micro);
+    letter-spacing: 0.06em;
+    color: var(--steel);
+    pointer-events: none;
+  }
+
+  .workshop__picker-label {
+    font-size: var(--step-micro);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--steel);
+    margin-bottom: 0.9rem;
+  }
+
+  .workshop__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.5rem;
+    padding: 0.5rem 0.9rem;
+    background: transparent;
+    color: var(--steel);
+    border: 1px solid var(--hairline);
+    border-radius: 100px;
+    font-size: var(--step-micro);
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      color 0.22s var(--ease),
+      border-color 0.22s var(--ease),
+      background-color 0.22s var(--ease);
+  }
+
+  .pill__icon {
+    display: grid;
+    place-items: center;
+    color: var(--steel-light);
+    transition: color 0.22s var(--ease);
+  }
+
+  .pill:hover {
+    color: var(--ink);
+    border-color: var(--steel-light);
+  }
+
+  .pill:hover .pill__icon {
+    color: var(--copper);
+  }
+
+  .pill[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .pill[aria-pressed='true'] .pill__icon {
+    color: var(--copper-lit);
+  }
+
+  @media (max-width: 900px) {
+    .workshop__stage {
+      aspect-ratio: 4 / 3;
+    }
+  }
+</style>
+
+<script>
+  import type { ModelKey, WorkshopHandle } from '../scripts/workshop';
+
+  const root = document.querySelector<HTMLElement>('[data-workshop]');
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-workshop-canvas]');
+  const picker = document.querySelector<HTMLElement>('[data-workshop-picker]');
+  const hint = document.querySelector<HTMLElement>('[data-workshop-hint]');
+
+  function supportsWebGL(): boolean {
+    try {
+      const probe = document.createElement('canvas');
+      return Boolean(probe.getContext('webgl2') ?? probe.getContext('webgl'));
+    } catch {
+      return false;
+    }
+  }
+
+  if (root && canvas) {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    const saveData = connection?.saveData === true;
+    const lowPower = (navigator.hardwareConcurrency ?? 4) <= 2;
+
+    // Skip 3D entirely rather than serve a bad version of it. The poster
+    // fallback is already on screen, so there is nothing further to do.
+    const skip = reduceMotion || saveData || lowPower || !supportsWebGL();
+
+    // Waits for the page to finish loading and then for an idle moment, so
+    // downloading and parsing three.js never competes with first paint or
+    // delays the hero becoming interactive.
+    const whenIdle = (cb: () => void) => {
+      const run = () => {
+        if ('requestIdleCallback' in window) {
+          (window as Window & { requestIdleCallback: (c: () => void, o?: { timeout: number }) => void })
+            .requestIdleCallback(cb, { timeout: 2500 });
+        } else {
+          setTimeout(cb, 300);
+        }
+      };
+      if (document.readyState === 'complete') run();
+      else window.addEventListener('load', run, { once: true });
+    };
+
+    if (!skip) {
+      const boot = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((e) => e.isIntersecting)) return;
+          boot.disconnect();
+
+          whenIdle(() => {
+            // Dynamic import so the three.js chunk never blocks first paint.
+            import('../scripts/workshop')
+              .then(({ createWorkshop }) => {
+                const initial = (root.dataset.initial ?? 'fridge') as ModelKey;
+                let handle: WorkshopHandle;
+
+                try {
+                  handle = createWorkshop(canvas, initial);
+                } catch {
+                  // WebGL can still fail at context creation; keep the poster.
+                  return;
+                }
+
+                root.dataset.mode = 'live';
+                picker?.removeAttribute('hidden');
+                hint?.removeAttribute('hidden');
+
+                const pills = Array.from(document.querySelectorAll<HTMLButtonElement>('.pill'));
+                pills.forEach((pill) => {
+                  pill.addEventListener('click', () => {
+                    const model = pill.dataset.model as ModelKey | undefined;
+                    if (!model) return;
+                    handle.show(model);
+                    pills.forEach((p) => p.setAttribute('aria-pressed', String(p === pill)));
+                  });
+                });
+              })
+              .catch(() => {
+                /* Poster stays; the page is unaffected. */
+              });
+          });
+        },
+        { rootMargin: '200px' },
+      );
+
+      boot.observe(canvas);
+    }
+  }
+</script>

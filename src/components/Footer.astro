@@ -1,0 +1,214 @@
+---
+import { site, addressOneLine, mapsUrl } from '../data/site';
+import { services } from '../data/services';
+
+// Resolved at build time — rebuild the site to refresh.
+const year = new Date().getFullYear();
+---
+
+<footer class="footer on-ink">
+  <div class="shell">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <p class="footer__wordmark">East Hills <span>Pty Ltd</span></p>
+        <p class="footer__blurb">
+          Electrical, refrigeration and fit-out work across {site.serviceArea.primary}. One team for
+          the jobs most people split between three contractors.
+        </p>
+        <p class="footer__abn">ABN {site.abn}</p>
+        {
+          site.licence.number && (
+            <p class="footer__abn">
+              {site.licence.authority} Licence {site.licence.number}
+            </p>
+          )
+        }
+        {site.arctick.number && <p class="footer__abn">ARCtick {site.arctick.number}</p>}
+      </div>
+
+      <div class="footer__col">
+        <h2 class="footer__heading">What we do</h2>
+        <ul class="footer__list">
+          {
+            services.map((service) => (
+              <li>
+                <a href={`/#${service.id}`}>{service.name}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h2 class="footer__heading">Get in touch</h2>
+        <ul class="footer__list">
+          {
+            site.phones.map((phone) => (
+              <li>
+                <a href={`tel:${phone.tel}`}>{phone.display}</a>
+              </li>
+            ))
+          }
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li>
+            <a href={mapsUrl} target="_blank" rel="noopener noreferrer">{addressOneLine}</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h2 class="footer__heading">Hours</h2>
+        <ul class="footer__list footer__list--plain">
+          {
+            site.hours.map((slot) => (
+              <li>
+                <span>{slot.label}</span>
+                <span class="footer__time">{slot.time}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__base">
+      <p>&copy; {year} {site.legalName}. All rights reserved.</p>
+      <nav class="footer__nav" aria-label="Footer">
+        <a href="/">Home</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-block: clamp(3.5rem, 8vh, 6rem) 2rem;
+  }
+
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 1.5fr repeat(3, 1fr);
+    gap: clamp(2rem, 4vw, 3.5rem);
+    padding-bottom: 3.5rem;
+  }
+
+  .footer__wordmark {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .footer__wordmark span {
+    font-size: 0.625rem;
+    letter-spacing: 0.34em;
+    color: var(--steel-light);
+  }
+
+  .footer__blurb {
+    margin-top: 1rem;
+    max-width: 34ch;
+    font-size: var(--step-small);
+    color: var(--steel-light);
+  }
+
+  .footer__abn {
+    margin-top: 1rem;
+    font-size: var(--step-micro);
+    letter-spacing: 0.06em;
+    color: var(--steel-mid);
+  }
+
+  .footer__heading {
+    font-size: var(--step-micro);
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--copper-lit);
+    margin-bottom: 1.25rem;
+  }
+
+  .footer__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: var(--step-small);
+    color: var(--steel-light);
+  }
+
+  .footer__list a {
+    display: inline-flex;
+    align-items: center;
+    /* Keeps footer links above the WCAG 2.5.8 minimum on desktop and gives a
+       full 44px target on touch screens (see media query below). */
+    min-height: 1.85rem;
+    transition: color 0.2s var(--ease);
+  }
+
+  .footer__list a:hover {
+    color: var(--paper);
+  }
+
+  .footer__list--plain li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .footer__time {
+    color: var(--steel-mid);
+  }
+
+  .footer__base {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 2rem;
+    border-top: 1px solid var(--hairline-invert);
+    font-size: var(--step-micro);
+    color: var(--steel-mid);
+  }
+
+  .footer__nav {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer__nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.85rem;
+  }
+
+  .footer__nav a:hover {
+    color: var(--paper);
+  }
+
+  @media (max-width: 900px) {
+    .footer__list a,
+    .footer__nav a {
+      min-height: 2.75rem;
+    }
+
+    .footer__list {
+      gap: 0;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .footer__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .footer__grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+  }
+</style>

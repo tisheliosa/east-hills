@@ -1,0 +1,207 @@
+---
+import { site, primaryPhone } from '../data/site';
+
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+
+<header class="nav" data-nav>
+  <div class="nav__inner shell">
+    <a class="wordmark" href="/" aria-label={`${site.legalName} — home`}>
+      <span class="wordmark__name">East Hills</span>
+      <span class="wordmark__suffix">Pty Ltd</span>
+    </a>
+
+    <nav class="nav__links" aria-label="Main">
+      {
+        links.map((link) => (
+          <a
+            href={link.href}
+            class="nav__link"
+            aria-current={path === link.href ? 'page' : undefined}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <a class="nav__call" href={`tel:${primaryPhone.tel}`}>
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <path d="M6.5 3.5h3l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5v3a1.5 1.5 0 0 1-1.7 1.5A16.5 16.5 0 0 1 5 5.2 1.5 1.5 0 0 1 6.5 3.5Z" />
+      </svg>
+      <span class="nav__call-number">{primaryPhone.display}</span>
+      <span class="nav__call-short">Call</span>
+    </a>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition:
+      background-color 0.35s var(--ease),
+      border-color 0.35s var(--ease),
+      backdrop-filter 0.35s var(--ease);
+  }
+
+  /* Solid once scrolled away from the hero, so the wordmark stays legible. */
+  .nav.is-solid {
+    background: rgba(250, 250, 248, 0.88);
+    backdrop-filter: blur(14px) saturate(160%);
+    border-bottom-color: var(--hairline);
+  }
+
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 4vw, 3rem);
+    min-height: 5rem;
+  }
+
+  .wordmark {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 2.75rem;
+    margin-right: auto;
+    font-family: var(--font-display);
+    line-height: 1;
+  }
+
+  .wordmark__name {
+    font-size: clamp(1.0625rem, 2.2vw, 1.3rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .wordmark__suffix {
+    margin-top: 0.3rem;
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--steel);
+  }
+
+  .nav__links {
+    display: flex;
+    gap: clamp(1rem, 2.5vw, 2rem);
+  }
+
+  .nav__link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    /* Full 44px tap target without changing the visual weight of the link. */
+    min-height: 2.75rem;
+    padding: 0.5rem 0;
+    font-size: var(--step-small);
+    font-weight: 500;
+    color: var(--steel);
+    transition: color 0.2s var(--ease);
+  }
+
+  .nav__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0.6rem;
+    width: 100%;
+    height: 1.5px;
+    background: var(--copper);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s var(--ease);
+  }
+
+  .nav__link:hover,
+  .nav__link[aria-current='page'] {
+    color: var(--ink);
+  }
+
+  .nav__link:hover::after,
+  .nav__link[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+
+  .nav__call {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 2.75rem;
+    padding: 0.6rem 1.1rem;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 2px;
+    font-family: var(--font-display);
+    font-size: var(--step-small);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    transition: background-color 0.25s var(--ease);
+  }
+
+  .nav__call:hover {
+    background: var(--copper);
+  }
+
+  .nav__call-short {
+    display: none;
+  }
+
+  /* Below 640px the full number will not fit beside the links, so show the
+     short label instead. The tel: target is identical either way. */
+  @media (max-width: 640px) {
+    .nav__inner {
+      min-height: 4.25rem;
+      gap: 1rem;
+    }
+
+    .nav__call-number {
+      display: none;
+    }
+
+    .nav__call-short {
+      display: inline;
+    }
+
+    .wordmark__suffix {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const nav = document.querySelector<HTMLElement>('[data-nav]');
+
+  if (nav) {
+    let ticking = false;
+
+    const sync = () => {
+      nav.classList.toggle('is-solid', window.scrollY > 24);
+      ticking = false;
+    };
+
+    // rAF-throttled so the scroll handler never blocks the main thread.
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(sync);
+      },
+      { passive: true },
+    );
+
+    sync();
+  }
+</script>

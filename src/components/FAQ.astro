@@ -1,0 +1,197 @@
+---
+import { site, primaryPhone } from '../data/site';
+
+// Licensing answer adapts to whether a real licence number has been supplied,
+// so the page never implies a number it does not have.
+const licenceLine = site.licence.number
+  ? `Our ${site.licence.authority} electrical licence number is ${site.licence.number}, and we carry public liability insurance.`
+  : 'All electrical work is carried out by licensed tradespeople, and we carry public liability insurance.';
+
+const faqs = [
+  {
+    q: 'Which areas do you service?',
+    a: `${site.serviceArea.detail} If you are not sure whether we come out to you, give us a call and we will tell you straight away.`,
+  },
+  {
+    q: 'Are you licensed and insured?',
+    a: `Yes. ${licenceLine} You are welcome to ask for our licence and insurance details before you book — we are always happy to provide them. Electrical work in NSW must legally be done by a licensed electrician, so it is a fair question to ask any trade you are considering.`,
+  },
+  {
+    q: 'Do you charge for quotes?',
+    a: 'No. Quotes are free and there is no obligation to go ahead. We price the work before we start, so the figure you agree to is the figure on the invoice — no hidden fees and no surprises at the end.',
+  },
+  {
+    q: `What does the ${site.warrantyMonths}-month warranty cover?`,
+    a: `Every repair we do is backed by a ${site.warrantyMonths}-month warranty on our workmanship. If the same fault comes back within that time, we return and put it right at no cost to you. Where we install a new unit, the manufacturer's own warranty applies on top of ours and we pass it on to you in full.`,
+  },
+  {
+    q: 'What does pick-up and delivery mean?',
+    a: `For appliances we can repair on the bench — smaller fridges and other electrical appliances — we will collect the item, repair it at our workshop in ${site.address.suburb}, and deliver it back to you. Anything that has to be fixed in place, like cool rooms, air conditioning and hot water systems, we repair on site.`,
+  },
+  {
+    q: 'How much will my job cost?',
+    a: 'It depends on the size of the job, the parts involved and how easy the work is to get to — an appliance repair and a full renovation rewire are very different jobs. Rather than guess, tell us what is going on and we will give you a fixed quote up front. Our rates are competitive, and if there is a cheaper way to solve your problem we will tell you about it.',
+  },
+  {
+    q: 'How quickly can you come out?',
+    a: `Call us and we will give you an honest answer rather than a vague window. ${site.emergencyNote}`,
+  },
+  {
+    q: 'Can you handle a whole renovation?',
+    a: 'Yes, and it is where having one team really pays off. We can take care of the wiring, the hot water system, the air conditioning, the laminate flooring and the deck — so you are not coordinating three different contractors, chasing three quotes and waiting on three schedules.',
+  },
+  {
+    q: 'Do you work with builders and commercial clients?',
+    a: 'Yes. We do new construction wiring and rough-in for builders, shopfront and hospitality refrigeration, and ongoing maintenance for commercial and strata-managed properties. If you need someone reliable on call for a site or a portfolio of properties, get in touch.',
+  },
+];
+
+const faqStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: { '@type': 'Answer', text: faq.a },
+  })),
+};
+---
+
+<section class="faq section" id="faq">
+  <div class="shell faq__grid">
+    <div class="faq__aside">
+      <p class="eyebrow" data-reveal>Questions</p>
+      <h2 class="faq__title" data-reveal style="--reveal-delay:60ms">
+        The things people ask us first.
+      </h2>
+      <p class="faq__help" data-reveal style="--reveal-delay:120ms">
+        Cannot see your question? Call and ask — you will get a straight answer, not a sales pitch.
+      </p>
+      <a class="btn btn--ghost faq__cta" href={`tel:${primaryPhone.tel}`} data-reveal style="--reveal-delay:180ms">
+        Call {primaryPhone.display}
+      </a>
+    </div>
+
+    <div class="faq__list" data-reveal-group>
+      {
+        faqs.map((faq) => (
+          <details class="qa" data-reveal>
+            <summary class="qa__q">
+              <span>{faq.q}</span>
+              <span class="qa__marker" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+                  <path d="M5 12h14M12 5v14" class="qa__plus-v" />
+                </svg>
+              </span>
+            </summary>
+            <p class="qa__a">{faq.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script type="application/ld+json" set:html={JSON.stringify(faqStructuredData)} is:inline />
+
+<style>
+  .faq__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  .faq__aside {
+    position: sticky;
+    top: 7rem;
+  }
+
+  .faq__title {
+    font-size: var(--step-h2);
+    max-width: 18ch;
+  }
+
+  .faq__help {
+    margin-top: 1.25rem;
+    max-width: 34ch;
+    color: var(--steel);
+  }
+
+  .faq__cta {
+    margin-top: 1.75rem;
+  }
+
+  .faq__list {
+    border-top: 1px solid var(--hairline);
+  }
+
+  .qa {
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .qa__q {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-block: 1.4rem;
+    /* Comfortable tap target for the whole row. */
+    min-height: 3.5rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.0625rem, 1.5vw, 1.2rem);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    cursor: pointer;
+    list-style: none;
+    transition: color 0.2s var(--ease);
+  }
+
+  /* Hides the native disclosure triangle in Safari. */
+  .qa__q::-webkit-details-marker {
+    display: none;
+  }
+
+  .qa__q:hover {
+    color: var(--copper);
+  }
+
+  .qa__marker {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 1.75rem;
+    height: 1.75rem;
+    color: var(--copper);
+  }
+
+  .qa__plus-v {
+    transition: transform 0.3s var(--ease);
+    transform-origin: center;
+  }
+
+  .qa[open] .qa__plus-v {
+    transform: rotate(135deg);
+  }
+
+  .qa__a {
+    padding-bottom: 1.6rem;
+    max-width: 66ch;
+    font-size: var(--step-small);
+    color: var(--steel);
+  }
+
+  @media (max-width: 900px) {
+    .faq__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .faq__aside {
+      position: static;
+    }
+
+    .faq__title {
+      max-width: none;
+    }
+  }
+</style>
