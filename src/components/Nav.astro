@@ -1,16 +1,17 @@
 ---
 import { site, primaryPhone } from '../data/site';
+import { withBase, normalizePath } from '../lib/url';
 
-const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const current = normalizePath(Astro.url.pathname);
 const links = [
-  { href: '/', label: 'Home' },
-  { href: '/contact', label: 'Contact' },
+  { href: withBase(), label: 'Home' },
+  { href: withBase('contact'), label: 'Contact' },
 ];
 ---
 
 <header class="nav" data-nav>
   <div class="nav__inner shell">
-    <a class="wordmark" href="/" aria-label={`${site.legalName} — home`}>
+    <a class="wordmark" href={withBase()} aria-label={`${site.legalName} — home`}>
       <span class="wordmark__name">East Hills</span>
       <span class="wordmark__suffix">Pty Ltd</span>
     </a>
@@ -21,7 +22,7 @@ const links = [
           <a
             href={link.href}
             class="nav__link"
-            aria-current={path === link.href ? 'page' : undefined}
+            aria-current={normalizePath(link.href) === current ? 'page' : undefined}
           >
             {link.label}
           </a>

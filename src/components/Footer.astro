@@ -1,6 +1,7 @@
 ---
 import { site, addressOneLine, mapsUrl } from '../data/site';
 import { services } from '../data/services';
+import { withBase } from '../lib/url';
 
 // Resolved at build time — rebuild the site to refresh.
 const year = new Date().getFullYear();
@@ -32,7 +33,7 @@ const year = new Date().getFullYear();
           {
             services.map((service) => (
               <li>
-                <a href={`/#${service.id}`}>{service.name}</a>
+                <a href={withBase(`#${service.id}`)}>{service.name}</a>
               </li>
             ))
           }
@@ -74,8 +75,8 @@ const year = new Date().getFullYear();
     <div class="footer__base">
       <p>&copy; {year} {site.legalName}. All rights reserved.</p>
       <nav class="footer__nav" aria-label="Footer">
-        <a href="/">Home</a>
-        <a href="/contact">Contact</a>
+        <a href={withBase()}>Home</a>
+        <a href={withBase('contact')}>Contact</a>
       </nav>
     </div>
   </div>
