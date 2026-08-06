@@ -169,6 +169,25 @@ import { withBase } from '../lib/url';
 `public/.nojekyll` is required and already present: without it GitHub Pages' Jekyll step strips the
 `_astro/` directory, which is where all the CSS, JS and fonts live.
 
+### Troubleshooting
+
+**`Invalid YAML front matter in ...astro` / `jekyll-build-pages` failing.** The Source is set to
+*Deploy from a branch*, so GitHub is running its legacy Jekyll builder against the repository source.
+Jekyll reads the `---` fences at the top of every `.astro` component as YAML front matter and chokes
+on the TypeScript inside. Fix it at **Settings → Pages → Source → GitHub Actions**; the Jekyll
+workflow then stops running. Do *not* try to silence it by adding a `.nojekyll` file at the
+repository root — that would make the legacy builder publish the raw, unbuilt source over the top of
+the real deployment. The `.nojekyll` this project needs lives in `public/`.
+
+**Page loads but is completely unstyled, and `_astro/*.css` 404s.** The live deployment was built
+with a different `base` than it is being served from — for example built while a custom domain was
+set (base `""`, assets at `/_astro/…`) and then served from `/east-hills/`. `base` is baked in at
+build time, so re-run the workflow to rebuild against the current Pages configuration.
+
+**A push did not trigger a deploy.** The workflow also has `workflow_dispatch`: go to Actions →
+*Deploy to GitHub Pages* → *Run workflow*. Check the `Deploy` job specifically — a green `Build` job
+only means the artifact was produced, not that it was published.
+
 ### Custom domain
 
 Add a `public/CNAME` file containing just the domain (e.g. `easthills.com.au`), point the DNS at
