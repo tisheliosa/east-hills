@@ -8,37 +8,37 @@
  */
 
 export interface PhoneNumber {
-  /** Human-readable form, e.g. "0406 128 888" */
+  /** Human-readable form, e.g. "0433388582" */
   display: string;
-  /** E.164 form for tel: links, e.g. "+61406128888" */
+  /** E.164 form for tel: links, e.g. "+61433388582" */
   tel: string;
   /** Optional label, e.g. "Main line" */
   label?: string;
 }
 
 export const site = {
-  name: 'East Hills',
-  legalName: 'East Hills PTY LTD',
-  abn: '71 636 422 387',
+  name: "East Hills",
+  legalName: "East Hills PTY LTD",
+  abn: "71 636 422 387",
 
-  tagline: 'Wired right. Finished properly.',
+  tagline: "Wired right. Finished properly.",
   description:
-    'Licensed electrical, refrigeration and fit-out work across Western Sydney. Electrical and wiring, commercial refrigeration, air conditioning, hot water systems, decking and floor lamination. Fast service, competitive rates and a three-month warranty.',
+    "Licensed electrical, refrigeration and fit-out work across Sydney. Electrical and wiring, commercial refrigeration, air conditioning, hot water systems, decking and floor lamination. Fast service, competitive rates and a three-month warranty.",
 
   phones: [
-    { display: '0406 128 888', tel: '+61406128888', label: 'Main line' },
-    { display: '0433 388 582', tel: '+61433388582', label: 'Second line' },
+    { display: "0433 388 582", tel: "+61433388582", label: "Main line" },
+    { display: "0406 128 888", tel: "+61406128888", label: "Second line" },
   ] as PhoneNumber[],
 
-  email: 'easthillsptyltd@gmail.com',
+  email: "easthillsptyltd@gmail.com",
 
   address: {
-    unit: 'Unit 3',
-    street: '1 Wiltona Place',
-    suburb: 'Girraween',
-    state: 'NSW',
-    postcode: '2145',
-    country: 'AU',
+    unit: "Unit 3",
+    street: "1 Wiltona Place",
+    suburb: "Girraween",
+    state: "NSW",
+    postcode: "2145",
+    country: "AU",
   },
 
   /** Approximate coordinates for Girraween NSW 2145, used in structured data. */
@@ -49,20 +49,41 @@ export const site = {
    * `schema` uses schema.org OpeningHoursSpecification day names.
    */
   hours: [
-    { label: 'Monday – Friday', time: '7:00am – 5:00pm', days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '07:00', closes: '17:00' },
-    { label: 'Saturday', time: '8:00am – 2:00pm', days: ['Saturday'], opens: '08:00', closes: '14:00' },
-    { label: 'Sunday', time: 'Closed', days: ['Sunday'], opens: null, closes: null },
+    {
+      label: "Monday – Sunday",
+      time: "7:00am – 7:00pm",
+      days: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
+      opens: "07:00",
+      closes: "19:00",
+    },
   ],
 
   /** TODO: confirm whether after-hours / emergency callouts are offered. */
-  emergencyNote: 'Urgent refrigeration breakdowns are prioritised — call and we will get to you as fast as we can.',
+  emergencyNote:
+    "Urgent breakdowns are prioritised — call and we will get to you as fast as we can.",
 
   /** TODO: confirm the true service radius. */
   serviceArea: {
-    primary: 'Western Sydney',
-    detail:
-      'Based in Girraween and working across Western Sydney and the greater Sydney metropolitan area — including Parramatta, Blacktown, Auburn, Merrylands, Liverpool and the Hills district.',
-    suburbs: ['Parramatta', 'Blacktown', 'Auburn', 'Merrylands', 'Liverpool', 'Granville', 'Wentworthville', 'Seven Hills'],
+    primary: "NSW",
+    detail: "Working across Sydney and the greater Sydney metropolitan area.",
+    suburbs: [
+      "Parramatta",
+      "Blacktown",
+      "Auburn",
+      "Merrylands",
+      "Liverpool",
+      "Granville",
+      "Wentworthville",
+      "Seven Hills",
+    ],
   },
 
   /**
@@ -73,7 +94,7 @@ export const site = {
    */
   licence: {
     number: null as string | null,
-    authority: 'NSW Fair Trading',
+    authority: "NSW Fair Trading",
   },
 
   /**

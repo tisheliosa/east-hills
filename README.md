@@ -1,7 +1,7 @@
 # East Hills PTY LTD — website
 
 Two-page marketing site for East Hills PTY LTD: electrical and wiring, commercial refrigeration,
-air conditioning, hot water systems, decking and floor lamination across Western Sydney.
+air conditioning, hot water systems, decking and floor lamination across Sydney.
 
 Built with [Astro](https://astro.build) as a fully static site. No backend, no database, no forms —
 enquiries go straight to the phone.
@@ -43,7 +43,7 @@ Two things are legally and commercially important, and both are currently placeh
 Also worth confirming or supplying:
 
 - **Trading hours** (`hours`) — currently assumed Mon–Fri 7am–5pm, Sat 8am–2pm, Sun closed.
-- **Service area** (`serviceArea`) — currently Western Sydney plus greater Sydney metro.
+- **Service area** (`serviceArea`) — currently Sydney plus greater Sydney metro.
 - **After-hours / emergency policy** (`emergencyNote`).
 - **Domain** — on GitHub Pages this is resolved automatically (see Deploying). For any other host,
   set the fallback `site` in `astro.config.mjs`; it drives canonical URLs, Open Graph tags, the
